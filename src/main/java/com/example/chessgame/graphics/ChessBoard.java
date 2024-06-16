@@ -1,5 +1,6 @@
 package com.example.chessgame.graphics;
 
+import com.example.chessgame.controllers.ChessBoardController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -31,6 +32,7 @@ public class ChessBoard {
 
     public GridPane createChessBoard() {
         GridPane gridPane = new GridPane();
+        gridPane.setOnMouseClicked(event -> new ChessBoardController().handleMouseClick(event, sizeOfSquare));
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
