@@ -2,6 +2,8 @@ package com.example.chessgame.graphics;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -9,6 +11,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+
+import java.util.Objects;
 
 public class ChessBoard {
     private final Color primaryColor;
@@ -70,6 +74,29 @@ public class ChessBoard {
                         rectangleParent.getChildren().add(textContainer2);
                     }
 
+                }
+                if (i == 0 || i == 7) {
+                    //Can be improved
+                    char color = (i == 0) ? 'b' : 'w';
+                    char piece = switch (j) {
+                        case 0, 7 -> 'r';
+                        case 1, 6 -> 'n';
+                        case 2, 5 -> 'b';
+                        case 3 -> 'q';
+                        case 4 -> 'k';
+                        default -> '0'; //Magic number
+                    };
+                    ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/chessgame/images/chess-pieces/" + color + piece + ".png"))));
+                    img.setFitHeight(sizeOfSquare);
+                    img.setFitWidth(sizeOfSquare);
+                    rectangleParent.getChildren().add(img);
+                }
+                if (i == 1 || i == 6) {
+                    char color = (i == 1) ? 'b' : 'w';
+                    ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/chessgame/images/chess-pieces/" + color + "p.png"))));
+                    img.setFitHeight(sizeOfSquare);
+                    img.setFitWidth(sizeOfSquare);
+                    rectangleParent.getChildren().add(img);
                 }
                 gridPane.add(rectangleParent, j, i);
             }
