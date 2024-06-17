@@ -1,9 +1,14 @@
 package com.example.chessgame.pieces;
 
-public class Piece {
-    private final char color;
-    private int row;
-    private int col;
+import com.example.chessgame.data.ChessBoardData;
+import com.example.chessgame.data.Position;
+
+import java.util.ArrayList;
+
+public abstract class Piece {
+    protected final char color;
+    protected int row;
+    protected int col;
     protected char letter;
 
     public Piece(char color, int row, int col) {
@@ -12,7 +17,22 @@ public class Piece {
         this.col = col;
     }
 
+    public char getColor() {
+        return color;
+    }
+
     public char getLetter() {
         return letter;
+    }
+    public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);
+
+    @Override
+    public String toString() {
+        return "Piece{" +
+                "color=" + color +
+                ", row=" + row +
+                ", col=" + col +
+                ", letter=" + letter +
+                '}';
     }
 }

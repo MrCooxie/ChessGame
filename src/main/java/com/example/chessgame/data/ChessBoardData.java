@@ -3,8 +3,14 @@ package com.example.chessgame.data;
 import com.example.chessgame.pieces.*;
 
 public class ChessBoardData {
+
+
     private final Piece[][] chessBoard = createChessBoard();
-    private final char turn = 'w';
+    private char turn = 'w';
+
+    public char getTurn() {
+        return turn;
+    }
 
     private Piece[][] createChessBoard() {
         Piece[][] chessBoard = new Piece[8][8];
@@ -41,5 +47,8 @@ public class ChessBoardData {
             }
             System.out.println(rowText.substring(0, rowText.length() - 2) + "]");
         }
+    }
+    public Piece[][] getChessBoard() {
+        return chessBoard;
     }
 }
