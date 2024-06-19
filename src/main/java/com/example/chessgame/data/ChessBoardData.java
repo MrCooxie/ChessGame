@@ -6,7 +6,7 @@ public class ChessBoardData {
 
 
     private final Piece[][] chessBoard = createChessBoard();
-    private char turn = 'w';
+    private final char turn = 'w';
 
     public char getTurn() {
         return turn;
@@ -48,7 +48,13 @@ public class ChessBoardData {
             System.out.println(rowText.substring(0, rowText.length() - 2) + "]");
         }
     }
+
     public Piece[][] getChessBoard() {
         return chessBoard;
+    }
+
+    public void removePieceFromBoard(int row, int col) {
+        chessBoard[row][col] = null;
+
     }
 }

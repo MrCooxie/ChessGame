@@ -5,7 +5,7 @@ import com.example.chessgame.data.Position;
 
 import java.util.ArrayList;
 
-public class Queen extends Piece{
+public class Queen extends Piece {
     public Queen(char color, int row, int col) {
         super(color, row, col);
         letter = 'Q';

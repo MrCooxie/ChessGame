@@ -24,15 +24,11 @@ public abstract class Piece {
     public char getLetter() {
         return letter;
     }
+
     public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);
 
     @Override
     public String toString() {
-        return "Piece{" +
-                "color=" + color +
-                ", row=" + row +
-                ", col=" + col +
-                ", letter=" + letter +
-                '}';
+        return "Piece{" + "color=" + color + ", row=" + row + ", col=" + col + ", letter=" + letter + '}';
     }
 }
