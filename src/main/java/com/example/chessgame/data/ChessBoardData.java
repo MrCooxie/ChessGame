@@ -6,10 +6,15 @@ public class ChessBoardData {
 
 
     private final Piece[][] chessBoard = createChessBoard();
-    private final char turn = 'w';
+    private char turn = 'w';
 
     public char getTurn() {
         return turn;
+    }
+
+    public void nextTurn(){
+        if(turn == 'w') turn = 'b';
+        else turn = 'w';
     }
 
     private Piece[][] createChessBoard() {

@@ -21,8 +21,25 @@ public abstract class Piece {
         return color;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
     public char getLetter() {
         return letter;
+    }
+
+    public void move(int row, int col, ChessBoardData chessBoardData){
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        chessBoard[this.row][this.col] = null;
+        this.row = row;
+        this.col = col;
+        chessBoard[row][col] = this;
+        chessBoardData.nextTurn();
     }
 
     public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);
