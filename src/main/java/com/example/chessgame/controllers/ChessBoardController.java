@@ -23,6 +23,7 @@ public class ChessBoardController {
         int clickedRow = (int) (mouseEvent.getY() / sizeOfSquare);
         int clickedCol = (int) (mouseEvent.getX() / sizeOfSquare);
         GridPane gridPane = (GridPane) mouseEvent.getSource();
+        handleLogic((Position) gridPane.getUserData(),clickedRow,clickedCol,chessBoardData);
         handleHints(clickedRow,clickedCol, gridPane,chessBoardData);
 
     }
@@ -58,6 +59,23 @@ public class ChessBoardController {
         for (Position move : placesToRemoveHints) {
             StackPane square = (StackPane) gridPane.getChildren().get(move.getRow() * 8 + move.getCol());
             square.getChildren().removeIf(item -> item instanceof Circle);
+        }
+    }
+
+    private void handleLogic(Position previousPosition, int clickedRow, int clickedCol, ChessBoardData chessBoardData){
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if(previousPosition != null && chessBoard[previousPosition.getRow()][previousPosition.getCol()] != null){
+            ArrayList<Position> legalMoves = chessBoard[previousPosition.getRow()][previousPosition.getCol()].getPossibleMoves(chessBoardData);
+            for(Position move : legalMoves){
+                if(move.getRow() == clickedRow && move.getCol() == clickedCol){
+                    //Legal move
+                    Piece movingPiece = chessBoard[previousPosition.getRow()][previousPosition.getCol()];
+                    movingPiece.setRow(clickedRow);
+                    movingPiece.setCol(clickedCol);
+                    chessBoard[previousPosition.getRow()][previousPosition.getCol()] = null;
+                    chessBoard[clickedRow][clickedCol] = movingPiece;
+                }
+            }
         }
     }
 }
