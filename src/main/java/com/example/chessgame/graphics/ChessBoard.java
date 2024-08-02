@@ -91,7 +91,6 @@ public class ChessBoard {
                         default -> '0'; //Magic number
                     };
                     ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/chessgame/images/chess-pieces/" + color + piece + ".png"))));
-                    img.setCursor(Cursor.HAND);
                     img.setFitHeight(sizeOfSquare);
                     img.setFitWidth(sizeOfSquare);
                     rectangleParent.getChildren().add(img);
@@ -99,7 +98,6 @@ public class ChessBoard {
                 if (i == 1 || i == 6) {
                     char color = (i == 1) ? 'b' : 'w';
                     ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/chessgame/images/chess-pieces/" + color + "p.png"))));
-                    img.setCursor(Cursor.HAND);
                     img.setFitHeight(sizeOfSquare);
                     img.setFitWidth(sizeOfSquare);
                     rectangleParent.getChildren().add(img);
