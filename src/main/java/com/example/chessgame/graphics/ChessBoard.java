@@ -34,7 +34,8 @@ public class ChessBoard {
 
     public GridPane createChessBoard() {
         GridPane gridPane = new GridPane();
-        gridPane.setOnMouseClicked(event -> new ChessBoardController().handleMouseClick(event, sizeOfSquare, new ChessBoardData()));
+        ChessBoardData chessBoardData = new ChessBoardData();
+        gridPane.setOnMouseClicked(event -> new ChessBoardController().handleMouseClick(event, sizeOfSquare, chessBoardData));
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {

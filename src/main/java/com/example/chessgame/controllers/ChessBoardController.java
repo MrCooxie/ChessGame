@@ -21,12 +21,9 @@ public class ChessBoardController {
 
 
     public void handleMouseClick(MouseEvent mouseEvent, int sizeOfSquare, ChessBoardData chessBoardData) {
-        //TODO: Don't need to use Piece object can also just use row and col
         int clickedRow = (int) (mouseEvent.getY() / sizeOfSquare);
         int clickedCol = (int) (mouseEvent.getX() / sizeOfSquare);
         GridPane gridPane = (GridPane) mouseEvent.getSource();
-        /*handleLogic((Position) gridPane.getUserData(),clickedRow,clickedCol,chessBoardData);
-        handleHints(clickedRow,clickedCol, gridPane,chessBoardData);*/
         handleMoveLogic(clickedRow,clickedCol, gridPane, chessBoardData);
 
     }
