@@ -47,12 +47,14 @@ public class ChessBoardController {
                 if(move.getRow() == clickedRow && move.getCol() == clickedCol) {
                     //Was a legal move make changes in graphics and logic.
                     Piece movingPiece = chessBoard[previousClick.getRow()][previousClick.getCol()];
-                    movingPiece.setRow(clickedRow);
+                    movingPiece.move(clickedRow,clickedCol,chessBoardData);
+
+
+                  /*  movingPiece.setRow(clickedRow);
                     movingPiece.setCol(clickedCol);
                     chessBoard[previousClick.getRow()][previousClick.getCol()] = null;
                     chessBoard[clickedRow][clickedCol] = movingPiece;
-                    chessBoardData.printChessBoard();
-
+                    chessBoardData.nextTurn();*/
                     StackPane square = (StackPane) gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol());
                     for(Node children : square.getChildren()){
                         if(children instanceof ImageView){

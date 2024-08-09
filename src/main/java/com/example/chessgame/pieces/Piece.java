@@ -11,6 +11,8 @@ public abstract class Piece {
     protected int col;
     protected char letter;
 
+    protected boolean hasMoved = false;
+
     public Piece(char color, int row, int col) {
         this.color = color;
         this.row = row;
@@ -49,6 +51,8 @@ public abstract class Piece {
         this.col = col;
         chessBoard[row][col] = this;
         chessBoardData.nextTurn();
+        hasMoved = true;
+
     }
 
     public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);

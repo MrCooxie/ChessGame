@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
-    private final boolean hasMoved = false;
-
     public Pawn(char color, int row, int col) {
         super(color, row, col);
         letter = 'P';
