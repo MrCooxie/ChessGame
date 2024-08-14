@@ -20,14 +20,16 @@ public class Pawn extends Piece {
             int moveDirection = (color == 'b') ? 1 : -1;
             Piece[][] chessBoard = chessBoardData.getChessBoard();
             if (CheckSquares.squareEmpty(chessBoard, row + moveDirection, col)) {
-                possibleMoves.add(new Position(row + moveDirection, col));
-                if (!(hasMoved) && CheckSquares.squareEmpty(chessBoard, row + 2 * moveDirection, col)) {
+                if (!CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col, color, this)) {
+                    possibleMoves.add(new Position(row + moveDirection, col));
+                }
+                if (!(hasMoved) && CheckSquares.squareEmpty(chessBoard, row + 2 * moveDirection, col) && !CheckSquares.moveCausesCheck(chessBoardData, row + 2 * moveDirection, col, color, this)) {
                     possibleMoves.add(new Position(row + 2 * moveDirection, col));
                 }
             }
-            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col + 1, color))
+            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col + 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col + 1, color, this))
                 possibleMoves.add(new Position(row + moveDirection, col + 1));
-            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col - 1, color))
+            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col - 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col - 1, color, this))
                 possibleMoves.add(new Position(row + moveDirection, col - 1));
         }
         return possibleMoves;

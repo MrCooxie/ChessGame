@@ -1,8 +1,10 @@
 package com.example.chessgame.helper;
 
+import com.example.chessgame.data.ChessBoardData;
 import com.example.chessgame.data.Position;
+import com.example.chessgame.pieces.King;
+import com.example.chessgame.pieces.Knight;
 import com.example.chessgame.pieces.Piece;
-import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 
@@ -21,7 +23,6 @@ public class CheckSquares {
 
     private static boolean isWithInBoard(int row, int col) {
         return (row >= 0 && row <= 7) && (col >= 0 && col <= 7);
-
     }
 
     public static ArrayList<Position> getAllDiagonalMoves(Piece[][] chessBoard, int row, int col, char color) {
@@ -123,10 +124,47 @@ public class CheckSquares {
         return allPossibleMoves;
     }
 
-    public static ArrayList<Position> getStraightAndDiagonalMoves(Piece[][] chessBoard, int row, int col, char color){
+    public static ArrayList<Position> getStraightAndDiagonalMoves(Piece[][] chessBoard, int row, int col, char color) {
         ArrayList<Position> allPossibleMoves = new ArrayList<>();
-        allPossibleMoves.addAll(getAllDiagonalMoves(chessBoard,row,col,color));
-        allPossibleMoves.addAll(getAllStraightMoves(chessBoard,row,col,color));
+        allPossibleMoves.addAll(getAllDiagonalMoves(chessBoard, row, col, color));
+        allPossibleMoves.addAll(getAllStraightMoves(chessBoard, row, col, color));
         return allPossibleMoves;
+    }
+
+    public static boolean isOppositeColorKnight(Piece[][] chessBoard, int row, int col, char color) {
+        if (isWithInBoard(row, col) && !squareEmpty(chessBoard, row, col) && squareOppositeColor(chessBoard, row, col, color)) {
+            return chessBoard[row][col] instanceof Knight;
+        }
+        return false;
+    }
+
+    public static boolean moveCausesCheck(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
+        //TODO: Might introduce a static variable of the position of the kings.
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessBoard[i][j] != null && chessBoard[i][j] instanceof King king && chessBoard[i][j].getColor() == color) {
+                    //King located
+
+                    Piece takenPiece = chessBoard[row][col];
+
+                    chessBoard[piece.getRow()][piece.getCol()] = null;
+                    chessBoard[row][col] = piece;
+                    //Can't use piece.move() because then turn changes and hasMoved property as well.
+                    if (king.isUnderCheck(chessBoard)) {
+                        chessBoard[row][col] = takenPiece;
+                        chessBoard[piece.getRow()][piece.getCol()] = piece;
+                        System.out.println("Check");
+                        return true;
+                    } else {
+                        chessBoard[row][col] = takenPiece;
+                        chessBoard[piece.getRow()][piece.getCol()] = piece;
+                        System.out.println("Not check");
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

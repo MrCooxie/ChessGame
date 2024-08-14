@@ -57,9 +57,4 @@ public class ChessBoardData {
     public Piece[][] getChessBoard() {
         return chessBoard;
     }
-
-    public void removePieceFromBoard(int row, int col) {
-        chessBoard[row][col] = null;
-
-    }
 }

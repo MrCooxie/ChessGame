@@ -3,8 +3,6 @@ package com.example.chessgame.controllers;
 import com.example.chessgame.data.ChessBoardData;
 import com.example.chessgame.data.Position;
 import com.example.chessgame.pieces.Piece;
-import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -13,9 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ChessBoardController {
 
@@ -48,13 +44,6 @@ public class ChessBoardController {
                     //Was a legal move make changes in graphics and logic.
                     Piece movingPiece = chessBoard[previousClick.getRow()][previousClick.getCol()];
                     movingPiece.move(clickedRow,clickedCol,chessBoardData);
-
-
-                  /*  movingPiece.setRow(clickedRow);
-                    movingPiece.setCol(clickedCol);
-                    chessBoard[previousClick.getRow()][previousClick.getCol()] = null;
-                    chessBoard[clickedRow][clickedCol] = movingPiece;
-                    chessBoardData.nextTurn();*/
                     StackPane square = (StackPane) gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol());
                     for(Node children : square.getChildren()){
                         if(children instanceof ImageView){
