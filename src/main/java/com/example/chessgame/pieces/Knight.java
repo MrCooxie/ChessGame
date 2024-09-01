@@ -38,6 +38,6 @@ public class Knight extends Piece {
 
     private boolean checkKnightMove(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
-        return (((CheckSquares.squareEmpty(chessBoard, row, col)) || CheckSquares.squareOppositeColor(chessBoard, row, col, color)) && !CheckSquares.moveCausesCheck(chessBoardData, row, col, color, piece));
+        return (((CheckSquares.squareEmpty(chessBoard, row, col)) || CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row, col, color)) && !CheckSquares.moveCausesCheck(chessBoardData, row, col, color, piece));
     }
 }

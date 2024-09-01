@@ -19,11 +19,11 @@ public class Pawn extends Piece {
         if (chessBoardData.getTurn() == color) {
             int moveDirection = (color == 'b') ? 1 : -1;
             Piece[][] chessBoard = chessBoardData.getChessBoard();
-            if (CheckSquares.squareEmpty(chessBoard, row + moveDirection, col)) {
+            if (CheckSquares.squareInBoardAndEmpty(chessBoard, row + moveDirection, col)) {
                 if (!CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col, color, this)) {
                     possibleMoves.add(new Position(row + moveDirection, col));
                 }
-                if (!(hasMoved) && CheckSquares.squareEmpty(chessBoard, row + 2 * moveDirection, col) && !CheckSquares.moveCausesCheck(chessBoardData, row + 2 * moveDirection, col, color, this)) {
+                if (!(hasMoved) && CheckSquares.squareInBoardAndEmpty(chessBoard, row + 2 * moveDirection, col) && !CheckSquares.moveCausesCheck(chessBoardData, row + 2 * moveDirection, col, color, this)) {
                     possibleMoves.add(new Position(row + 2 * moveDirection, col));
                 }
             }

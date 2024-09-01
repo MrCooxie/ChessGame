@@ -19,16 +19,22 @@ public class CheckSquares {
     }
 
     public static boolean squareEmpty(Piece[][] chessBoard, int row, int col) {
-        return isWithInBoard(row, col) && chessBoard[row][col] == null;
+        return chessBoard[row][col] == null;
     }
-
-    public static boolean squareOppositeColor(Piece[][] chessBoard, int row, int col, char color) {
-        return (isWithInBoard(row, col) && chessBoard[row][col] != null && !(chessBoard[row][col].getColor() == color));
-    }
-
-    private static boolean isWithInBoard(int row, int col) {
+    public static boolean isWithInBoard(int row, int col) {
         return (row >= 0 && row <= 7) && (col >= 0 && col <= 7);
     }
+    public static boolean squareInBoardAndEmpty(Piece[][] chessboard, int row, int col){
+        return isWithInBoard(row,col) && squareEmpty(chessboard,row,col);
+    }
+    public static boolean squareOppositeColor(Piece[][] chessBoard, int row, int col, char color) {
+        return !(chessBoard[row][col].getColor() == color);
+    }
+    public static boolean squareInBoardNotEmptyOppositeColor(Piece[][] chessBoard, int row, int col, char color){
+        return (isWithInBoard(row, col) && chessBoard[row][col] != null && squareOppositeColor(chessBoard,row,col,color));
+    }
+
+
 
 
     public static boolean isOppositeColorKnight(Piece[][] chessBoard, int row, int col, char color) {

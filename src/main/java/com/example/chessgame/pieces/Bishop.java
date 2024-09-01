@@ -14,59 +14,39 @@ public class Bishop extends Piece {
 
     @Override
     public ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData) {
+        //Loses some time, but is much cleaner;
         ArrayList<Position> possibleMoves = new ArrayList<>();
         if (chessBoardData.getTurn() == color) {
-            boolean[] diagonalBlocked = {false, false, false, false};
-            for (int i = 1; i < 8; i++) {
-                if (!diagonalBlocked[0]) {
-                    if (!CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row - i, col - i, color)) {
-                        diagonalBlocked[0] = true;
-                    } else {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row - i, col - i, color, this)) {
-                            possibleMoves.add(new Position(row - i, col - i));
-                        }
-                        if (CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row - i, col - i, color)) {
-                            diagonalBlocked[0] = true;
-                        }
-                    }
-                }
-                if (!diagonalBlocked[1]) {
-                    if (!CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row - i, col + i, color)) {
-                        diagonalBlocked[1] = true;
-                    } else {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row - i, col + i, color, this)) {
-                            possibleMoves.add(new Position(row - i, col + i));
-                        }
-                        if (CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row - i, col + i, color)) {
-                            diagonalBlocked[1] = true;
-                        }
-                    }
-                }
-                if (!diagonalBlocked[2]) {
-                    if (!CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row + i, col - i, color)) {
-                        diagonalBlocked[2] = true;
-                    } else {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i, col - i, color, this)) {
-                            possibleMoves.add(new Position(row + i, col - i));
-                        }
-                        if (CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row + i, col - i, color)) {
-                            diagonalBlocked[2] = true;
-                        }
-                    }
-                }
-                if (!diagonalBlocked[3]) {
-                    if (!CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row + i, col + i, color)) {
-                        diagonalBlocked[3] = true;
-                    } else {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i, col + i, color, this)) {
-                            possibleMoves.add(new Position(row + i, col + i));
-                        }
-                        if (CheckSquares.squareOppositeColor(chessBoardData.getChessBoard(), row + i, col + i, color)) {
-                            diagonalBlocked[3] = true;
-                        }
-                    }
-                }
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1,-1,chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1,+1,chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1,-1,chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1,+1,chessBoardData));
+        }
+        return possibleMoves;
+    }
 
+    private ArrayList<Position> oneDirectionAllPossibleMoves(int rowIncrement, int colIncrement, ChessBoardData chessBoardData) {
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+        boolean blocked = false;
+        for (int i = 1; i < 8; i++) {
+            if (!blocked) {
+                if (CheckSquares.isWithInBoard(row + i * rowIncrement, col + i * colIncrement)) {
+                    if (CheckSquares.squareEmpty(chessBoard, row + i * rowIncrement, col + i * colIncrement)) {
+                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
+                        }
+                    } else if (CheckSquares.squareOppositeColor(chessBoard, row + i * rowIncrement, col + i * colIncrement, color)) {
+                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
+                        }
+                        blocked = true;
+                    } else {
+                        blocked = true;
+                    }
+                } else {
+                    blocked = true;
+                }
             }
         }
         return possibleMoves;
