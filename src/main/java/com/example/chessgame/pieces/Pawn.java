@@ -27,9 +27,9 @@ public class Pawn extends Piece {
                     possibleMoves.add(new Position(row + 2 * moveDirection, col));
                 }
             }
-            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col + 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col + 1, color, this))
+            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col + 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col + 1, color, this))
                 possibleMoves.add(new Position(row + moveDirection, col + 1));
-            if (CheckSquares.squareOppositeColor(chessBoard, row + moveDirection, col - 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col - 1, color, this))
+            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col - 1, color) && !CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col - 1, color, this))
                 possibleMoves.add(new Position(row + moveDirection, col - 1));
         }
         return possibleMoves;
