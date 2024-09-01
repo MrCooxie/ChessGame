@@ -16,25 +16,28 @@ public class Knight extends Piece {
     public ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         if (chessBoardData.getTurn() == color) {
-            Piece[][] chessBoard = chessBoardData.getChessBoard();
-            if (CheckSquares.squareEmpty(chessBoard, row + 2, col - 1) || CheckSquares.squareOppositeColor(chessBoard, row + 2, col - 1, color))
+            if (checkKnightMove(chessBoardData, row + 2, col - 1, color, this))
                 possibleMoves.add(new Position(row + 2, col - 1));
-            if (CheckSquares.squareEmpty(chessBoard, row + 2, col + 1) || CheckSquares.squareOppositeColor(chessBoard, row + 2, col + 1, color))
+            if (checkKnightMove(chessBoardData, row + 2, col + 1, color, this))
                 possibleMoves.add(new Position(row + 2, col + 1));
-            if (CheckSquares.squareEmpty(chessBoard, row - 2, col - 1) || CheckSquares.squareOppositeColor(chessBoard, row - 2, col - 1, color))
+            if (checkKnightMove(chessBoardData, row - 2, col - 1, color, this))
                 possibleMoves.add(new Position(row - 2, col - 1));
-            if (CheckSquares.squareEmpty(chessBoard, row - 2, col + 1) || CheckSquares.squareOppositeColor(chessBoard, row - 2, col + 1, color))
+            if (checkKnightMove(chessBoardData, row - 2, col + 1, color, this))
                 possibleMoves.add(new Position(row - 2, col + 1));
-            if (CheckSquares.squareEmpty(chessBoard, row + 1, col + 2) || CheckSquares.squareOppositeColor(chessBoard, row + 1, col + 2, color))
+            if (checkKnightMove(chessBoardData, row + 1, col + 2, color, this))
                 possibleMoves.add(new Position(row + 1, col + 2));
-            if (CheckSquares.squareEmpty(chessBoard, row - 1, col + 2) || CheckSquares.squareOppositeColor(chessBoard, row - 1, col + 2, color))
+            if (checkKnightMove(chessBoardData, row - 1, col + 2, color, this))
                 possibleMoves.add(new Position(row - 1, col + 2));
-            if (CheckSquares.squareEmpty(chessBoard, row + 1, col - 2) || CheckSquares.squareOppositeColor(chessBoard, row + 1, col - 2, color))
+            if (checkKnightMove(chessBoardData, row + 1, col - 2, color, this))
                 possibleMoves.add(new Position(row + 1, col - 2));
-            if (CheckSquares.squareEmpty(chessBoard, row - 1, col - 2) || CheckSquares.squareOppositeColor(chessBoard, row - 1, col - 2, color))
+            if (checkKnightMove(chessBoardData, row - 1, col - 2, color, this))
                 possibleMoves.add(new Position(row - 1, col - 2));
-
         }
         return possibleMoves;
+    }
+
+    private boolean checkKnightMove(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        return (((CheckSquares.squareEmpty(chessBoard, row, col)) || CheckSquares.squareOppositeColor(chessBoard, row, col, color)) && !CheckSquares.moveCausesCheck(chessBoardData, row, col, color, piece));
     }
 }

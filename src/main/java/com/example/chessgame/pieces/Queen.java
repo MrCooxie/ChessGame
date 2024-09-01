@@ -2,7 +2,6 @@ package com.example.chessgame.pieces;
 
 import com.example.chessgame.data.ChessBoardData;
 import com.example.chessgame.data.Position;
-import com.example.chessgame.helper.CheckSquares;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,13 @@ public class Queen extends Piece {
 
     @Override
     public ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData) {
-        return CheckSquares.getStraightAndDiagonalMoves(chessBoardData.getChessBoard(), row, col, color);
-
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        chessBoard[row][col] = new Bishop(color, row, col);
+        ArrayList<Position> diagonalMoves = chessBoard[row][col].getPossibleMoves(chessBoardData);
+        chessBoard[row][col] = new Rook(color, row, col);
+        ArrayList<Position> straightMoves = chessBoard[row][col].getPossibleMoves(chessBoardData);
+        chessBoard[row][col] = this;
+        diagonalMoves.addAll(straightMoves);
+        return diagonalMoves;
     }
 }
