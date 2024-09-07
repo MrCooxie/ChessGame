@@ -5,6 +5,8 @@ import com.example.chessgame.pieces.King;
 import com.example.chessgame.pieces.Knight;
 import com.example.chessgame.pieces.Piece;
 
+import java.util.Arrays;
+
 public class CheckSquares {
     private CheckSquares() {
 
@@ -58,9 +60,9 @@ public class CheckSquares {
                     chessBoard[row][col] = piece;
                     //Can't use piece.move() because then turn changes and hasMoved property as well.
                     if (king.isUnderCheck(chessBoard)) {
+                        chessBoardData.printChessBoard();
                         chessBoard[row][col] = takenPiece;
                         chessBoard[piece.getRow()][piece.getCol()] = piece;
-                        System.out.println("Check");
                         return true;
                     } else {
                         chessBoard[row][col] = takenPiece;

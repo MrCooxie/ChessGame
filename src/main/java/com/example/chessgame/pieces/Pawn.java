@@ -20,6 +20,7 @@ public class Pawn extends Piece {
             int moveDirection = (color == 'b') ? 1 : -1;
             Piece[][] chessBoard = chessBoardData.getChessBoard();
             if (CheckSquares.squareInBoardAndEmpty(chessBoard, row + moveDirection, col)) {
+                System.out.print("Here");
                 if (!CheckSquares.moveCausesCheck(chessBoardData, row + moveDirection, col, color, this)) {
                     possibleMoves.add(new Position(row + moveDirection, col));
                 }
