@@ -2,6 +2,8 @@ package com.example.chessgame.controllers;
 
 import com.example.chessgame.data.ChessBoardData;
 import com.example.chessgame.data.Position;
+import com.example.chessgame.helper.CheckSquares;
+import com.example.chessgame.pieces.Pawn;
 import com.example.chessgame.pieces.Piece;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
@@ -12,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ChessBoardController {
 
@@ -43,7 +46,66 @@ public class ChessBoardController {
                 if(move.getRow() == clickedRow && move.getCol() == clickedCol) {
                     //Was a legal move make changes in graphics and logic.
                     Piece movingPiece = chessBoard[previousClick.getRow()][previousClick.getCol()];
-                    movingPiece.move(clickedRow,clickedCol,chessBoardData, move.isCastling());
+
+                    if(move.isEnPassant()){
+                        if(CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, previousClick.getRow(), previousClick.getCol() + 1, movingPiece.getColor()) && chessBoard[previousClick.getRow()][previousClick.getCol() + 1] instanceof Pawn && ((Pawn) chessBoard[previousClick.getRow()][previousClick.getCol() + 1]).isMovedFar()){
+                            StackPane stackPane = ((StackPane)gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol() + 1));
+                            for(Node item : stackPane.getChildren()){
+                                if(item instanceof ImageView imageView) {
+                                    stackPane.getChildren().remove(imageView);
+                                    break;
+                                }
+                            }
+                        } else {
+                            StackPane stackPane = ((StackPane)gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol() - 1));
+                            for(Node item : stackPane.getChildren()){
+                                if(item instanceof ImageView imageView) {
+                                    stackPane.getChildren().remove(imageView);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(move.isCastling()){
+                        //Need to move the rook
+                        if(clickedCol > previousClick.getCol()){
+                            StackPane rookStackPane;
+                            int index;
+                            if(movingPiece.getColor() == 'b'){
+                                rookStackPane = (StackPane) gridPane.getChildren().get(7);
+                                index = 7;
+                            } else {
+                                rookStackPane = (StackPane) gridPane.getChildren().get(63);
+                                index = 63;
+                            }
+                            for(Node children : rookStackPane.getChildren()){
+                                if(children instanceof ImageView temporary){
+                                    rookStackPane.getChildren().remove(temporary);
+                                    ((StackPane) gridPane.getChildren().get(index - 2)).getChildren().add(temporary);
+                                    break;
+                                }
+                            }
+                        } else {
+                            StackPane rookStackPane;
+                            int index;
+                            if(movingPiece.getColor() == 'b'){
+                                rookStackPane = (StackPane) gridPane.getChildren().get(0);
+                                index = 0;
+                            } else {
+                                rookStackPane = (StackPane) gridPane.getChildren().get(56);
+                                index = 56;
+                            }
+                            for(Node children : rookStackPane.getChildren()){
+                                if(children instanceof ImageView temporary){
+                                    rookStackPane.getChildren().remove(temporary);
+                                    ((StackPane) gridPane.getChildren().get(index + 3)).getChildren().add(temporary);
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                    movingPiece.move(clickedRow,clickedCol,chessBoardData, move.isCastling(), move.isEnPassant());
                     StackPane square = (StackPane) gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol());
                     for(Node children : square.getChildren()){
                         if(children instanceof ImageView){
@@ -59,48 +121,7 @@ public class ChessBoardController {
                         }
                     }
 
-                    if(move.isCastling()){
-
-
-
-                        //Need to move the rook
-                            if(clickedCol > previousClick.getCol()){
-                                StackPane rookStackPane;
-                                int index;
-                                if(movingPiece.getColor() == 'b'){
-                                    rookStackPane = (StackPane) gridPane.getChildren().get(7);
-                                    index = 7;
-                            } else {
-                                    rookStackPane = (StackPane) gridPane.getChildren().get(63);
-                                    index = 63;
-                                }
-                                for(Node children : rookStackPane.getChildren()){
-                                    if(children instanceof ImageView temporary){
-                                        rookStackPane.getChildren().remove(temporary);
-                                        ((StackPane) gridPane.getChildren().get(index - 2)).getChildren().add(temporary);
-                                        break;
-                                    }
-                                }
-                        } else {
-                                StackPane rookStackPane;
-                                int index;
-                                if(movingPiece.getColor() == 'b'){
-                                    rookStackPane = (StackPane) gridPane.getChildren().get(0);
-                                    index = 0;
-                                } else {
-                                    rookStackPane = (StackPane) gridPane.getChildren().get(56);
-                                    index = 56;
-                                }
-                                for(Node children : rookStackPane.getChildren()){
-                                    if(children instanceof ImageView temporary){
-                                        rookStackPane.getChildren().remove(temporary);
-                                        ((StackPane) gridPane.getChildren().get(index + 3)).getChildren().add(temporary);
-                                        break;
-                                    }
-                                }
-                            }
-
-                    }
+                //
                 }
             }
             gridPane.setUserData(new Position(clickedRow,clickedCol));

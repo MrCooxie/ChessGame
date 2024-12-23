@@ -6,13 +6,16 @@ public class Position {
 
     private final boolean castling;
 
+    private final boolean enPassant;
+
     public Position(int row, int col) {
-        this(row, col, false);
+        this(row, col, false, false);
     }
-    public Position(int row, int col, boolean castling){
+    public Position(int row, int col, boolean castling, boolean enPassant){
         this.row = row;
         this.col = col;
         this.castling = castling;
+        this.enPassant = enPassant;
     }
 
     public int getRow() {
@@ -23,6 +26,9 @@ public class Position {
         return col;
     }
 
+    public boolean isEnPassant() {
+        return enPassant;
+    }
 
     public boolean isCastling() {
         return castling;

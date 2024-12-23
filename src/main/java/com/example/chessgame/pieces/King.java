@@ -28,8 +28,8 @@ public class King extends Piece {
             if(canMoveToSquare(chessBoardData, row - 1, col)) possibleMoves.add(new Position(row - 1, col));
             if(canMoveToSquare(chessBoardData, row - 1, col - 1)) possibleMoves.add(new Position(row - 1, col - 1));
 
-            if(canCastleKingSide(chessBoardData)) possibleMoves.add(new Position(row, col + 2, true));
-            if(canCastleQueenSide(chessBoardData)) possibleMoves.add(new Position(row, col - 2, true));
+            if(canCastleKingSide(chessBoardData)) possibleMoves.add(new Position(row, col + 2, true, false));
+            if(canCastleQueenSide(chessBoardData)) possibleMoves.add(new Position(row, col - 2, true, false));
 
         }
         return possibleMoves;
@@ -102,5 +102,35 @@ public class King extends Piece {
             }
         }
         return false;
+    }
+    public void castle(Piece[][] chessBoard, int row, int col){
+        //Figure if king side or queen side.
+        if(this.col < col){
+            //King Side
+            Piece piece;
+            if(color == 'b'){
+                piece = chessBoard[0][7];
+                chessBoard[0][7] = null;
+            } else {
+                piece = chessBoard[7][7];
+                chessBoard[7][7] = null;
+            }
+            piece.setCol(5);
+            chessBoard[piece.row][piece.col] = piece;
+
+        } else {
+            //Queen side
+            Piece piece;
+            if(color == 'b'){
+                piece = chessBoard[0][0];
+                chessBoard[0][0] = null;
+            } else {
+                piece = chessBoard[7][0];
+                chessBoard[7][0] = null;
+            }
+            piece.setCol(3);
+            chessBoard[piece.row][piece.col] = piece;
+        }
+
     }
 }

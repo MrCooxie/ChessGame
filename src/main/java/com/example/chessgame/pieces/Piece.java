@@ -44,36 +44,26 @@ public abstract class Piece {
         return letter;
     }
 
-    public void move(int row, int col, ChessBoardData chessBoardData, boolean isCastling){
+    public void move(int row, int col, ChessBoardData chessBoardData, boolean isCastling, boolean isEnPassant){
         Piece[][] chessBoard = chessBoardData.getChessBoard();
         if(isCastling){
-            //Figure if king side or queen side.
-            if(this.col < col){
-                //King Side
-                Piece piece;
-                if(color == 'b'){
-                    piece = chessBoard[0][7];
-                    chessBoard[0][7] = null;
-                } else {
-                    piece = chessBoard[7][7];
-                    chessBoard[7][7] = null;
-                }
-                piece.setCol(5);
-                chessBoard[piece.row][piece.col] = piece;
+            ((King) this).castle(chessBoard, row, col);
+        }
+        if(isEnPassant){
+            assert this instanceof Pawn;
+            ((Pawn) this).enPassant(chessBoard);
 
-            } else {
-                //Queen side
-                Piece piece;
-                if(color == 'b'){
-                    piece = chessBoard[0][0];
-                    chessBoard[0][0] = null;
-                } else {
-                    piece = chessBoard[7][0];
-                    chessBoard[7][0] = null;
+        }
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(chessBoard[i][j] instanceof Pawn){
+                    ((Pawn) chessBoard[i][j]).setMovedFar(false);
                 }
-                piece.setCol(3);
-                chessBoard[piece.row][piece.col] = piece;
             }
+        }
+        if(this instanceof Pawn && Math.abs(this.row - row) == 2){
+            ((Pawn) this).setMovedFar(true);
+
         }
         chessBoard[this.row][this.col] = null;
         this.row = row;
@@ -82,7 +72,6 @@ public abstract class Piece {
 
         chessBoardData.nextTurn();
         hasMoved = true;
-
     }
 
     public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);
