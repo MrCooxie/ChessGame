@@ -65,9 +65,8 @@ public class CheckSquares {
                         king.setCol(j);
                     }
 
+                //TODO: Try to use King's methods
 
-
-                    //Can't use piece.move() because then turn changes and hasMoved property as well.
                     if (king.isUnderCheck(chessBoard)) {
                         chessBoard[row][col] = takenPiece;
                         chessBoard[pieceRow][pieceCol] = piece;

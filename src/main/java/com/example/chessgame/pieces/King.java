@@ -17,7 +17,7 @@ public class King extends Piece {
     public ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         if (chessBoardData.getTurn() == color) {
-          //if(canMoveToSquare(chessBoardData, row + 1, col +1)) possibleMoves.add(new Position(row + 1, col + 1));
+            if(canMoveToSquare(chessBoardData, row + 1, col +1)) possibleMoves.add(new Position(row + 1, col + 1));
             if(canMoveToSquare(chessBoardData, row + 1, col)) possibleMoves.add(new Position(row + 1, col));
             if(canMoveToSquare(chessBoardData, row + 1, col - 1)) possibleMoves.add(new Position(row + 1, col - 1));
 
@@ -27,8 +27,35 @@ public class King extends Piece {
             if(canMoveToSquare(chessBoardData, row - 1, col +1)) possibleMoves.add(new Position(row - 1, col + 1));
             if(canMoveToSquare(chessBoardData, row - 1, col)) possibleMoves.add(new Position(row - 1, col));
             if(canMoveToSquare(chessBoardData, row - 1, col - 1)) possibleMoves.add(new Position(row - 1, col - 1));
+
+            if(canCastleKingSide(chessBoardData)) possibleMoves.add(new Position(row, col + 2, true));
+            if(canCastleQueenSide(chessBoardData)) possibleMoves.add(new Position(row, col - 2, true));
+
         }
         return possibleMoves;
+    }
+
+    private boolean canCastleQueenSide(ChessBoardData chessBoardData){
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if( !hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col - 1) && CheckSquares.squareEmpty(chessBoard, row, col - 2) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 1, color, this) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 2, color, this)){
+            if(color == 'b' && !CheckSquares.squareEmpty(chessBoard,0,0) && chessBoard[0][0] instanceof Rook && chessBoard[0][0].color == 'b' && !chessBoard[0][0].hasMoved){
+                return true;
+            }
+            return color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 0) && chessBoard[7][0] instanceof Rook && chessBoard[7][0].color == 'w' && !chessBoard[7][0].hasMoved;
+        }
+        return false;
+     }
+
+    private boolean canCastleKingSide(ChessBoardData chessBoardData){
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if(!hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col + 1) && CheckSquares.squareEmpty(chessBoard, row, col + 2) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 1, color, this) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 2, color, this)){
+            //Check if rook has moved
+            if(color == 'b' && !CheckSquares.squareEmpty(chessBoard,0,7) && chessBoard[0][7] instanceof Rook && chessBoard[0][7].color == 'b' && !chessBoard[0][7].hasMoved){
+                return true;
+            }
+            return color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 7) && chessBoard[7][7] instanceof Rook && chessBoard[7][7].color == 'w' && !chessBoard[7][7].hasMoved;
+        }
+        return false;
     }
     private boolean canMoveToSquare(ChessBoardData chessBoardData, int row, int col){
         Piece[][] chessBoard = chessBoardData.getChessBoard();

@@ -44,12 +44,42 @@ public abstract class Piece {
         return letter;
     }
 
-    public void move(int row, int col, ChessBoardData chessBoardData){
+    public void move(int row, int col, ChessBoardData chessBoardData, boolean isCastling){
         Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if(isCastling){
+            //Figure if king side or queen side.
+            if(this.col < col){
+                //King Side
+                Piece piece;
+                if(color == 'b'){
+                    piece = chessBoard[0][7];
+                    chessBoard[0][7] = null;
+                } else {
+                    piece = chessBoard[7][7];
+                    chessBoard[7][7] = null;
+                }
+                piece.setCol(5);
+                chessBoard[piece.row][piece.col] = piece;
+
+            } else {
+                //Queen side
+                Piece piece;
+                if(color == 'b'){
+                    piece = chessBoard[0][0];
+                    chessBoard[0][0] = null;
+                } else {
+                    piece = chessBoard[7][0];
+                    chessBoard[7][0] = null;
+                }
+                piece.setCol(3);
+                chessBoard[piece.row][piece.col] = piece;
+            }
+        }
         chessBoard[this.row][this.col] = null;
         this.row = row;
         this.col = col;
         chessBoard[row][col] = this;
+
         chessBoardData.nextTurn();
         hasMoved = true;
 
