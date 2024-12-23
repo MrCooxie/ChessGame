@@ -49,24 +49,40 @@ public class CheckSquares {
     public static boolean moveCausesCheck(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
         //TODO: Might introduce a static variable of the position of the kings.
         Piece[][] chessBoard = chessBoardData.getChessBoard();
+        int pieceRow = piece.getRow();
+        int pieceCol = piece.getCol();
+        Piece takenPiece = chessBoard[row][col];
+
+        chessBoard[piece.getRow()][piece.getCol()] = null;
+        chessBoard[row][col] = piece;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (chessBoard[i][j] != null && chessBoard[i][j] instanceof King king && chessBoard[i][j].getColor() == color) {
                     //King located
+                    //King check
+                    if(piece instanceof King) {
+                        king.setRow(i);
+                        king.setCol(j);
+                    }
 
-                    Piece takenPiece = chessBoard[row][col];
 
-                    chessBoard[piece.getRow()][piece.getCol()] = null;
-                    chessBoard[row][col] = piece;
+
                     //Can't use piece.move() because then turn changes and hasMoved property as well.
                     if (king.isUnderCheck(chessBoard)) {
-                        chessBoardData.printChessBoard();
                         chessBoard[row][col] = takenPiece;
-                        chessBoard[piece.getRow()][piece.getCol()] = piece;
+                        chessBoard[pieceRow][pieceCol] = piece;
+                        if(piece instanceof King) {
+                            king.setRow(pieceRow);
+                            king.setCol(pieceCol);
+                        }
                         return true;
                     } else {
                         chessBoard[row][col] = takenPiece;
-                        chessBoard[piece.getRow()][piece.getCol()] = piece;
+                        chessBoard[pieceRow][pieceCol] = piece;
+                        if(piece instanceof King) {
+                            king.setRow(pieceRow);
+                            king.setCol(pieceCol);
+                        }
                         return false;
                     }
                 }
