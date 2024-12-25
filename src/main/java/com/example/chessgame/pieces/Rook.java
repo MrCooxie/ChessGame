@@ -1,6 +1,7 @@
 package com.example.chessgame.pieces;
 
 import com.example.chessgame.data.ChessBoardData;
+import com.example.chessgame.data.Move;
 import com.example.chessgame.data.Position;
 import com.example.chessgame.helper.CheckSquares;
 
@@ -25,6 +26,7 @@ public class Rook extends Piece {
         }
         return possibleMoves;
     }
+
     private ArrayList<Position> oneDirectionAllPossibleMoves(int rowIncrement, int colIncrement, ChessBoardData chessBoardData) {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
         ArrayList<Position> possibleMoves = new ArrayList<>();
@@ -33,12 +35,12 @@ public class Rook extends Piece {
             if (!blocked) {
                 if (CheckSquares.isWithInBoard(row + i * rowIncrement, col + i * colIncrement)) {
                     if (CheckSquares.squareEmpty(chessBoard, row + i * rowIncrement, col + i * colIncrement)) {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                        if (CheckSquares.moveNotCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
                             possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
                         }
                     } else if (CheckSquares.squareOppositeColor(chessBoard, row + i * rowIncrement, col + i * colIncrement, color)) {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
-                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
+                        if (CheckSquares.moveNotCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement, Move.TAKING));
                         }
                         blocked = true;
                     } else {

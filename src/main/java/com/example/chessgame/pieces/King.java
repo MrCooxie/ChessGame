@@ -1,11 +1,11 @@
 package com.example.chessgame.pieces;
 
 import com.example.chessgame.data.ChessBoardData;
+import com.example.chessgame.data.Move;
 import com.example.chessgame.data.Position;
 import com.example.chessgame.helper.CheckSquares;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class King extends Piece {
     public King(char color, int row, int col) {
@@ -17,52 +17,67 @@ public class King extends Piece {
     public ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         if (chessBoardData.getTurn() == color) {
-            if(canMoveToSquare(chessBoardData, row + 1, col +1)) possibleMoves.add(new Position(row + 1, col + 1));
-            if(canMoveToSquare(chessBoardData, row + 1, col)) possibleMoves.add(new Position(row + 1, col));
-            if(canMoveToSquare(chessBoardData, row + 1, col - 1)) possibleMoves.add(new Position(row + 1, col - 1));
 
-            if(canMoveToSquare(chessBoardData, row , col +1)) possibleMoves.add(new Position(row, col + 1));
-            if(canMoveToSquare(chessBoardData, row, col - 1)) possibleMoves.add(new Position(row, col - 1));
+            canMoveToEmptySquare(chessBoardData, row + 1, col + 1, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row + 1, col, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row + 1, col - 1, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row, col + 1, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row, col - 1, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row - 1, col + 1, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row - 1, col, possibleMoves);
+            canMoveToEmptySquare(chessBoardData, row - 1, col - 1, possibleMoves);
 
-            if(canMoveToSquare(chessBoardData, row - 1, col +1)) possibleMoves.add(new Position(row - 1, col + 1));
-            if(canMoveToSquare(chessBoardData, row - 1, col)) possibleMoves.add(new Position(row - 1, col));
-            if(canMoveToSquare(chessBoardData, row - 1, col - 1)) possibleMoves.add(new Position(row - 1, col - 1));
+            canMoveOnPiece(chessBoardData, row + 1, col + 1, possibleMoves);
+            canMoveOnPiece(chessBoardData, row + 1, col, possibleMoves);
+            canMoveOnPiece(chessBoardData, row + 1, col - 1, possibleMoves);
+            canMoveOnPiece(chessBoardData, row, col + 1, possibleMoves);
+            canMoveOnPiece(chessBoardData, row, col - 1, possibleMoves);
+            canMoveOnPiece(chessBoardData, row - 1, col + 1, possibleMoves);
+            canMoveOnPiece(chessBoardData, row - 1, col, possibleMoves);
+            canMoveOnPiece(chessBoardData, row - 1, col - 1, possibleMoves);
 
-            if(canCastleKingSide(chessBoardData)) possibleMoves.add(new Position(row, col + 2, true, false));
-            if(canCastleQueenSide(chessBoardData)) possibleMoves.add(new Position(row, col - 2, true, false));
+            canCastleKingSide(chessBoardData, possibleMoves);
+            canCastleQueenSide(chessBoardData, possibleMoves);
 
         }
         return possibleMoves;
     }
 
-    private boolean canCastleQueenSide(ChessBoardData chessBoardData){
+    private void canCastleQueenSide(ChessBoardData chessBoardData, ArrayList<Position> possibleMoves) {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
-        if( !hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col - 1) && CheckSquares.squareEmpty(chessBoard, row, col - 2) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 1, color, this) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 2, color, this)){
-            if(color == 'b' && !CheckSquares.squareEmpty(chessBoard,0,0) && chessBoard[0][0] instanceof Rook && chessBoard[0][0].color == 'b' && !chessBoard[0][0].hasMoved){
-                return true;
+        if (!hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col - 1) && CheckSquares.squareEmpty(chessBoard, row, col - 2) && CheckSquares.moveNotCheck(chessBoardData, row, col + 1, color, this) && CheckSquares.moveNotCheck(chessBoardData, row, col + 2, color, this)) {
+            if (color == 'b' && !CheckSquares.squareEmpty(chessBoard, 0, 0) && chessBoard[0][0] instanceof Rook && chessBoard[0][0].color == 'b' && !chessBoard[0][0].hasMoved) {
+                possibleMoves.add(new Position(row, col - 2, Move.CASTLING));
+            } else if (color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 0) && chessBoard[7][0] instanceof Rook && chessBoard[7][0].color == 'w' && !chessBoard[7][0].hasMoved) {
+                possibleMoves.add(new Position(row, col - 2, Move.CASTLING));
             }
-            return color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 0) && chessBoard[7][0] instanceof Rook && chessBoard[7][0].color == 'w' && !chessBoard[7][0].hasMoved;
         }
-        return false;
-     }
-
-    private boolean canCastleKingSide(ChessBoardData chessBoardData){
-        Piece[][] chessBoard = chessBoardData.getChessBoard();
-        if(!hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col + 1) && CheckSquares.squareEmpty(chessBoard, row, col + 2) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 1, color, this) && !CheckSquares.moveCausesCheck(chessBoardData, row, col + 2, color, this)){
-            //Check if rook has moved
-            if(color == 'b' && !CheckSquares.squareEmpty(chessBoard,0,7) && chessBoard[0][7] instanceof Rook && chessBoard[0][7].color == 'b' && !chessBoard[0][7].hasMoved){
-                return true;
-            }
-            return color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 7) && chessBoard[7][7] instanceof Rook && chessBoard[7][7].color == 'w' && !chessBoard[7][7].hasMoved;
-        }
-        return false;
     }
-    private boolean canMoveToSquare(ChessBoardData chessBoardData, int row, int col){
-        Piece[][] chessBoard = chessBoardData.getChessBoard();
-        //System.out.print(row + ", " + col);
-        //if(CheckSquares.isWithInBoard(row, col) && ((CheckSquares.squareEmpty(chessBoard, row, col) || (!CheckSquares.squareEmpty(chessBoard, row, col) && CheckSquares.squareOppositeColor(chessBoard, row, col, color))))) System.out.println(!CheckSquares.moveCausesCheck(chessBoardData, row, col, color, this));
-        return CheckSquares.isWithInBoard(row, col) && ((CheckSquares.squareEmpty(chessBoard, row, col) || (!CheckSquares.squareEmpty(chessBoard, row, col) && CheckSquares.squareOppositeColor(chessBoard, row, col, color))) && !CheckSquares.moveCausesCheck(chessBoardData, row, col, color, this));
 
+    private void canCastleKingSide(ChessBoardData chessBoardData, ArrayList<Position> possibleMoves) {
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if (!hasMoved && !isUnderCheck(chessBoard) && CheckSquares.squareEmpty(chessBoard, row, col + 1) && CheckSquares.squareEmpty(chessBoard, row, col + 2) && CheckSquares.moveNotCheck(chessBoardData, row, col + 1, color, this) && CheckSquares.moveNotCheck(chessBoardData, row, col + 2, color, this)) {
+            if (color == 'b' && !CheckSquares.squareEmpty(chessBoard, 0, 7) && chessBoard[0][7] instanceof Rook && chessBoard[0][7].color == 'b' && !chessBoard[0][7].hasMoved) {
+                possibleMoves.add(new Position(row, col + 2, Move.CASTLING));
+            } else if (color == 'w' && !CheckSquares.squareEmpty(chessBoard, 7, 7) && chessBoard[7][7] instanceof Rook && chessBoard[7][7].color == 'w' && !chessBoard[7][7].hasMoved) {
+                possibleMoves.add(new Position(row, col + 2, Move.CASTLING));
+            }
+        }
+    }
+
+    private void canMoveToEmptySquare(ChessBoardData chessBoardData, int row, int col, ArrayList<Position> possibleMoves) {
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if (CheckSquares.squareInBoardAndEmpty(chessBoard, row, col) && CheckSquares.moveNotCheck(chessBoardData, row, col, color, this)) {
+            possibleMoves.add(new Position(row, col));
+        }
+
+    }
+
+    private void canMoveOnPiece(ChessBoardData chessBoardData, int row, int col, ArrayList<Position> possibleMoves) {
+        Piece[][] chessBoard = chessBoardData.getChessBoard();
+        if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row, col, color) && CheckSquares.moveNotCheck(chessBoardData, row, col, color, this)) {
+            possibleMoves.add(new Position(row, col, Move.TAKING));
+        }
     }
 
     public boolean isUnderCheck(Piece[][] chessBoard) {
@@ -103,12 +118,13 @@ public class King extends Piece {
         }
         return false;
     }
-    public void castle(Piece[][] chessBoard, int row, int col){
+
+    public void castle(Piece[][] chessBoard, int row, int col) {
         //Figure if king side or queen side.
-        if(this.col < col){
+        if (this.col < col) {
             //King Side
             Piece piece;
-            if(color == 'b'){
+            if (color == 'b') {
                 piece = chessBoard[0][7];
                 chessBoard[0][7] = null;
             } else {
@@ -121,7 +137,7 @@ public class King extends Piece {
         } else {
             //Queen side
             Piece piece;
-            if(color == 'b'){
+            if (color == 'b') {
                 piece = chessBoard[0][0];
                 chessBoard[0][0] = null;
             } else {

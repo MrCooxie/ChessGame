@@ -4,18 +4,17 @@ public class Position {
     private final int row;
     private final int col;
 
-    private final boolean castling;
-
-    private final boolean enPassant;
+    private final Move specialMove;
 
     public Position(int row, int col) {
-        this(row, col, false, false);
+        this(row, col, null);
     }
-    public Position(int row, int col, boolean castling, boolean enPassant){
+
+    public Position(int row, int col, Move move) {
         this.row = row;
         this.col = col;
-        this.castling = castling;
-        this.enPassant = enPassant;
+        specialMove = move;
+
     }
 
     public int getRow() {
@@ -26,20 +25,8 @@ public class Position {
         return col;
     }
 
-    public boolean isEnPassant() {
-        return enPassant;
+    public Move getSpecialMove() {
+        return specialMove;
     }
 
-    public boolean isCastling() {
-        return castling;
-    }
-
-    @Override
-    public String toString() {
-        return "Position{" +
-                "row=" + row +
-                ", col=" + col +
-                ", castling=" + castling +
-                '}';
-    }
 }

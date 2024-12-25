@@ -12,8 +12,8 @@ public class ChessBoardData {
         return turn;
     }
 
-    public void nextTurn(){
-        if(turn == 'w') turn = 'b';
+    public void nextTurn() {
+        if (turn == 'w') turn = 'b';
         else turn = 'w';
     }
 

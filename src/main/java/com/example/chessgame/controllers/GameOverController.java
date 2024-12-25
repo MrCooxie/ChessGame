@@ -8,16 +8,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Stack;
 
 public class GameOverController {
 
@@ -30,7 +26,7 @@ public class GameOverController {
         scene.setRoot(stackPane);
 
         try {
-            VBox vBox = (VBox) FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/GameResultScreen.fxml"));
+            VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/GameResultScreen.fxml"));
             addResultText(gameResult, vBox);
             stackPane.getChildren().add(vBox);
 
@@ -41,9 +37,9 @@ public class GameOverController {
 
     }
 
-    private void addResultText(GameResult gameResult, VBox vBox){
+    private void addResultText(GameResult gameResult, VBox vBox) {
         Text text = (Text) vBox.lookup("#result");
-        switch (gameResult){
+        switch (gameResult) {
             case WHITE_WIN -> {
                 text.setText("Valge võitis!");
             }
@@ -57,22 +53,25 @@ public class GameOverController {
         }
 
     }
+
     @FXML
-    private void onButtonClickEvent(MouseEvent mouseEvent){
+    private void onButtonClickEvent(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
         Scene scene = button.getScene();
         scene.setRoot(new ChessBoard().createChessBoard());
 
 
     }
+
     @FXML
-    private void onButtonHoverEvent(MouseEvent mouseEvent){
+    private void onButtonHoverEvent(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
         button.setStyle("-fx-background-color:rgb(163, 209, 96); -fx-background-radius: 10");
 
     }
+
     @FXML
-    private void onButtonExitEvent(MouseEvent mouseEvent){
+    private void onButtonExitEvent(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
         button.setStyle("-fx-background-color: rgb(129, 182, 76); -fx-background-radius: 10");
 

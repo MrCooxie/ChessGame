@@ -2,8 +2,9 @@ package com.example.chessgame.pieces;
 
 import com.example.chessgame.controllers.GameOverController;
 import com.example.chessgame.data.ChessBoardData;
-import com.example.chessgame.data.Position;
 import com.example.chessgame.data.GameResult;
+import com.example.chessgame.data.Move;
+import com.example.chessgame.data.Position;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -34,37 +35,38 @@ public abstract class Piece {
         this.row = row;
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-
     public int getCol() {
         return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 
     public char getLetter() {
         return letter;
     }
 
-    public void move(int row, int col, ChessBoardData chessBoardData, boolean isCastling, boolean isEnPassant, GridPane gridPane){
+    public void move(int row, int col, ChessBoardData chessBoardData, Move specialMove, GridPane gridPane) {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
-        if(isCastling){
-            ((King) this).castle(chessBoard, row, col);
-        }
-        if(isEnPassant){
-            assert this instanceof Pawn;
-            ((Pawn) this).enPassant(chessBoard);
+        if (specialMove != null) {
+            if (specialMove.equals(Move.CASTLING)) {
+                ((King) this).castle(chessBoard, row, col);
+            }
+            if (specialMove.equals(Move.EN_PASSANT)) {
+                assert this instanceof Pawn;
+                ((Pawn) this).enPassant(chessBoard);
 
+            }
         }
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                if(chessBoard[i][j] instanceof Pawn){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessBoard[i][j] instanceof Pawn) {
                     ((Pawn) chessBoard[i][j]).setMovedFar(false);
                 }
             }
         }
-        if(this instanceof Pawn && Math.abs(this.row - row) == 2){
+        if (this instanceof Pawn && Math.abs(this.row - row) == 2) {
             ((Pawn) this).setMovedFar(true);
 
         }
@@ -83,8 +85,8 @@ public abstract class Piece {
 
     public abstract ArrayList<Position> getPossibleMoves(ChessBoardData chessBoardData);
 
-    private void checkForGameEnd(ChessBoardData chessBoardData, GridPane gridPane){
-        switch (getGameResult(chessBoardData)){
+    private void checkForGameEnd(ChessBoardData chessBoardData, GridPane gridPane) {
+        switch (getGameResult(chessBoardData)) {
             case BLACK_WIN -> {
                 new GameOverController().createMatchOverScreen(GameResult.BLACK_WIN, gridPane);
             }
@@ -99,25 +101,26 @@ public abstract class Piece {
             }
         }
     }
-    private GameResult getGameResult(ChessBoardData chessBoardData){
+
+    private GameResult getGameResult(ChessBoardData chessBoardData) {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
         //Check if opponent can make any move
-        for(int row = 0; row < 8; row++){
-            for(int col = 0; col < 8; col++){
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
                 Piece checkingPiece = chessBoard[row][col];
-                if(checkingPiece != null && checkingPiece.getColor() == chessBoardData.getTurn()){
-                    if(!checkingPiece.getPossibleMoves(chessBoardData).isEmpty()){
+                if (checkingPiece != null && checkingPiece.getColor() == chessBoardData.getTurn()) {
+                    if (!checkingPiece.getPossibleMoves(chessBoardData).isEmpty()) {
                         return GameResult.PLAY_ON;
                     }
                 }
             }
         }
 
-        for(int row = 0; row < 8; row++){
-            for(int col = 0; col < 8; col++){
-                if(chessBoard[row][col] != null && chessBoard[row][col] instanceof King && chessBoard[row][col].getColor() == chessBoardData.getTurn()){
-                    if(((King) chessBoard[row][col]).isUnderCheck(chessBoard)){
-                        if(chessBoardData.getTurn() == 'b'){
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (chessBoard[row][col] != null && chessBoard[row][col] instanceof King && chessBoard[row][col].getColor() == chessBoardData.getTurn()) {
+                    if (((King) chessBoard[row][col]).isUnderCheck(chessBoard)) {
+                        if (chessBoardData.getTurn() == 'b') {
                             return GameResult.WHITE_WIN;
                         } else {
                             return GameResult.BLACK_WIN;
@@ -130,6 +133,7 @@ public abstract class Piece {
         }
         return GameResult.STALEMATE;
     }
+
     @Override
     public String toString() {
         return "Piece{" + "color=" + color + ", row=" + row + ", col=" + col + ", letter=" + letter + '}';

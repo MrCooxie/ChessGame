@@ -1,6 +1,7 @@
 package com.example.chessgame.pieces;
 
 import com.example.chessgame.data.ChessBoardData;
+import com.example.chessgame.data.Move;
 import com.example.chessgame.data.Position;
 import com.example.chessgame.helper.CheckSquares;
 
@@ -17,10 +18,10 @@ public class Bishop extends Piece {
         //Loses some time, but is much cleaner;
         ArrayList<Position> possibleMoves = new ArrayList<>();
         if (chessBoardData.getTurn() == color) {
-            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1,-1,chessBoardData));
-            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1,+1,chessBoardData));
-            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1,-1,chessBoardData));
-            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1,+1,chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1, -1, chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(-1, +1, chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1, -1, chessBoardData));
+            possibleMoves.addAll(oneDirectionAllPossibleMoves(+1, +1, chessBoardData));
         }
         return possibleMoves;
     }
@@ -33,12 +34,12 @@ public class Bishop extends Piece {
             if (!blocked) {
                 if (CheckSquares.isWithInBoard(row + i * rowIncrement, col + i * colIncrement)) {
                     if (CheckSquares.squareEmpty(chessBoard, row + i * rowIncrement, col + i * colIncrement)) {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                        if (CheckSquares.moveNotCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
                             possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
                         }
                     } else if (CheckSquares.squareOppositeColor(chessBoard, row + i * rowIncrement, col + i * colIncrement, color)) {
-                        if (!CheckSquares.moveCausesCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
-                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement));
+                        if (CheckSquares.moveNotCheck(chessBoardData, row + i * rowIncrement, col + i * colIncrement, color, this)) {
+                            possibleMoves.add(new Position(row + i * rowIncrement, col + i * colIncrement, Move.TAKING));
                         }
                         blocked = true;
                     } else {

@@ -2,10 +2,8 @@ package com.example.chessgame.graphics;
 
 import com.example.chessgame.controllers.ChessBoardController;
 import com.example.chessgame.data.ChessBoardData;
-import com.sun.scenario.effect.impl.state.AccessHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -32,8 +30,17 @@ public class ChessBoard {
         ChessBoard.secondaryTextColor = secondaryTextColor;
         ChessBoard.sizeOfSquare = sizeOfSquare;
     }
-    public ChessBoard(){
 
+    public ChessBoard() {
+
+    }
+
+    public static Color getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public static Color getSecondaryColor() {
+        return secondaryColor;
     }
 
     public GridPane createChessBoard() {
