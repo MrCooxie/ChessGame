@@ -105,7 +105,7 @@ public class ChessBoardController {
                         }
 
                     }
-                    movingPiece.move(clickedRow,clickedCol,chessBoardData, move.isCastling(), move.isEnPassant());
+                    movingPiece.move(clickedRow,clickedCol,chessBoardData, move.isCastling(), move.isEnPassant(), gridPane);
                     StackPane square = (StackPane) gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol());
                     for(Node children : square.getChildren()){
                         if(children instanceof ImageView){

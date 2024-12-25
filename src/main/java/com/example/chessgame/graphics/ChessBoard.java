@@ -2,6 +2,7 @@ package com.example.chessgame.graphics;
 
 import com.example.chessgame.controllers.ChessBoardController;
 import com.example.chessgame.data.ChessBoardData;
+import com.sun.scenario.effect.impl.state.AccessHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -18,22 +19,26 @@ import javafx.scene.text.Text;
 import java.util.Objects;
 
 public class ChessBoard {
-    private final Color primaryColor;
-    private final Color secondaryColor;
-    private final int sizeOfSquare;
-    private final Color primaryTextColor;
-    private final Color secondaryTextColor;
+    private static Color primaryColor = null;
+    private static Color secondaryColor = null;
+    private static int sizeOfSquare = 0;
+    private static Color primaryTextColor = null;
+    private static Color secondaryTextColor = null;
 
     public ChessBoard(Color primaryColor, Color secondaryColor, Color primaryTextColor, Color secondaryTextColor, int sizeOfSquare) {
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-        this.primaryTextColor = primaryTextColor;
-        this.secondaryTextColor = secondaryTextColor;
-        this.sizeOfSquare = sizeOfSquare;
+        ChessBoard.primaryColor = primaryColor;
+        ChessBoard.secondaryColor = secondaryColor;
+        ChessBoard.primaryTextColor = primaryTextColor;
+        ChessBoard.secondaryTextColor = secondaryTextColor;
+        ChessBoard.sizeOfSquare = sizeOfSquare;
+    }
+    public ChessBoard(){
+
     }
 
     public GridPane createChessBoard() {
         GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
         ChessBoardData chessBoardData = new ChessBoardData();
         gridPane.setOnMouseClicked(event -> new ChessBoardController().handleMouseClick(event, sizeOfSquare, chessBoardData));
 

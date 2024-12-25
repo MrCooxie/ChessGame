@@ -16,6 +16,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         Scene scene = new Scene(new ChessBoard(Color.rgb(119, 149, 86), Color.rgb(235, 236, 208), Color.rgb(115, 149, 82), Color.rgb(235, 236, 208), 92).createChessBoard());
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 }
