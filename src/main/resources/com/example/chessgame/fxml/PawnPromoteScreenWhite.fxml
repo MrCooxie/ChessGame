@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="92.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chessgame.controllers.PromoteScreenController">
+   <children>
+      <ImageView fx:id="wq" fitHeight="92.0" fitWidth="92.0" onMouseClicked="#onPieceClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/chess-pieces/wq.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="wr" fitHeight="92.0" fitWidth="92.0" onMouseClicked="#onPieceClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/chess-pieces/wr.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="wb" fitHeight="92.0" fitWidth="92.0" onMouseClicked="#onPieceClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/chess-pieces/wb.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="wn" fitHeight="92.0" fitWidth="92.0" onMouseClicked="#onPieceClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/chess-pieces/wn.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</VBox>

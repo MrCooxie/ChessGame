@@ -81,6 +81,7 @@ public class King extends Piece {
     }
 
     public boolean isUnderCheck(Piece[][] chessBoard) {
+        //TODO: Can pawn attack
         return canKnightAttack(chessBoard) || canDiagonalAttack(chessBoard) || canStraightAttack(chessBoard);
     }
 

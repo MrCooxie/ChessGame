@@ -32,16 +32,34 @@ public class Pawn extends Piece {
             Piece[][] chessBoard = chessBoardData.getChessBoard();
             if (CheckSquares.squareInBoardAndEmpty(chessBoard, row + moveDirection, col)) {
                 if (CheckSquares.moveNotCheck(chessBoardData, row + moveDirection, col, color, this)) {
+                    if (pawnToOtherSide(row + moveDirection)) {
+                        possibleMoves.add(new Position(row + moveDirection, col, Move.PROMOTE));
+                    } else {
+                        possibleMoves.add(new Position(row + moveDirection, col));
+                    }
                     possibleMoves.add(new Position(row + moveDirection, col));
                 }
                 if (!(hasMoved) && CheckSquares.squareInBoardAndEmpty(chessBoard, row + 2 * moveDirection, col) && CheckSquares.moveNotCheck(chessBoardData, row + 2 * moveDirection, col, color, this)) {
                     possibleMoves.add(new Position(row + 2 * moveDirection, col));
                 }
             }
-            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col + 1, color) && CheckSquares.moveNotCheck(chessBoardData, row + moveDirection, col + 1, color, this))
-                possibleMoves.add(new Position(row + moveDirection, col + 1, Move.TAKING));
-            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col - 1, color) && CheckSquares.moveNotCheck(chessBoardData, row + moveDirection, col - 1, color, this))
-                possibleMoves.add(new Position(row + moveDirection, col - 1, Move.TAKING));
+            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col + 1, color) && CheckSquares.moveNotCheck(chessBoardData, row + moveDirection, col + 1, color, this)) {
+                if (pawnToOtherSide(row + moveDirection)) {
+                    possibleMoves.add(new Position(row + moveDirection, col + 1, Move.PROMOTE_TAKING));
+                } else {
+                    possibleMoves.add(new Position(row + moveDirection, col + 1, Move.TAKING));
+                }
+
+            }
+            if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + moveDirection, col - 1, color) && CheckSquares.moveNotCheck(chessBoardData, row + moveDirection, col - 1, color, this)) {
+                if (pawnToOtherSide(row + moveDirection)) {
+                    possibleMoves.add(new Position(row + moveDirection, col - 1, Move.PROMOTE_TAKING));
+
+                } else {
+                    possibleMoves.add(new Position(row + moveDirection, col - 1, Move.TAKING));
+
+                }
+            }
 
             //En Passant
             if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row, col - 1, color) && chessBoard[row][col - 1] instanceof Pawn && ((Pawn) chessBoard[row][col - 1]).isMovedFar()) {
@@ -54,6 +72,10 @@ public class Pawn extends Piece {
         return possibleMoves;
     }
 
+    private boolean pawnToOtherSide(int row) {
+        return (row == 0 && color == 'w') || (row == 7 && color == 'b');
+    }
+
     public void enPassant(Piece[][] chessBoard) {
         if (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row, col + 1, color) && chessBoard[row][col + 1] instanceof Pawn && ((Pawn) chessBoard[row][col + 1]).isMovedFar()) {
             chessBoard[row][col + 1] = null;
@@ -61,6 +83,28 @@ public class Pawn extends Piece {
         } else {
             chessBoard[row][col - 1] = null;
 
+        }
+    }
+
+    public void promotePiece(Piece[][] chessBoard, String piece) {
+        char promotedPieceColor = piece.charAt(0);
+        char pieceToPromoteTO = piece.charAt(1);
+        switch (pieceToPromoteTO) {
+            case 'q' -> {
+                chessBoard[this.row][this.col] = new Queen(promotedPieceColor, this.row, this.col);
+            }
+            case 'r' -> {
+                chessBoard[this.row][this.col] = new Rook(promotedPieceColor, this.row, this.col);
+
+            }
+            case 'b' -> {
+                chessBoard[this.row][this.col] = new Bishop(promotedPieceColor, this.row, this.col);
+
+            }
+            case 'n' -> {
+                chessBoard[this.row][this.col] = new Knight(promotedPieceColor, this.row, this.col);
+
+            }
         }
     }
 }

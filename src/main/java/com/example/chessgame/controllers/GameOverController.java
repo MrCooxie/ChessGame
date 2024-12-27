@@ -27,6 +27,7 @@ public class GameOverController {
 
         try {
             VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/GameResultScreen.fxml"));
+            vBox.setUserData(gridPane);
             addResultText(gameResult, vBox);
             stackPane.getChildren().add(vBox);
 

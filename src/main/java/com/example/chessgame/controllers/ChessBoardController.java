@@ -1,5 +1,6 @@
 package com.example.chessgame.controllers;
 
+import com.example.chessgame.DTO.PawnPromoteDTO;
 import com.example.chessgame.data.ChessBoardData;
 import com.example.chessgame.data.Move;
 import com.example.chessgame.data.Position;
@@ -7,16 +8,22 @@ import com.example.chessgame.graphics.ChessBoard;
 import com.example.chessgame.helper.CheckSquares;
 import com.example.chessgame.pieces.Pawn;
 import com.example.chessgame.pieces.Piece;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ChessBoardController {
@@ -58,6 +65,31 @@ public class ChessBoardController {
                         if (move.getSpecialMove().equals(Move.CASTLING)) {
                             moveIsCastling(gridPane, clickedCol, previousClick, movingPiece);
                         }
+                        if (move.getSpecialMove().equals(Move.PROMOTE) || move.getSpecialMove().equals(Move.PROMOTE_TAKING)) {
+                            StackPane stackPane = new StackPane();
+                            Scene scene = gridPane.getScene();
+                            stackPane.getChildren().add(gridPane);
+                            try {
+                                VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenWhite.fxml"));
+                                vBox.setUserData(new PawnPromoteDTO(gridPane, clickedRow, clickedCol, chessBoardData));
+                                if (chessBoardData.getTurn() == 'w') {
+                                    StackPane.setAlignment(vBox, Pos.TOP_LEFT);
+                                    StackPane.setMargin(vBox, new Insets(0, 0, 0, clickedCol * 92));
+
+                                } else {
+                                    vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenBlack.fxml"));
+                                    StackPane.setAlignment(vBox, Pos.BOTTOM_LEFT);
+                                    StackPane.setMargin(vBox, new Insets(0, 0, 0, clickedCol * 92));
+                                    vBox.setUserData(new PawnPromoteDTO(gridPane, clickedRow, clickedCol, chessBoardData));
+                                }
+                                stackPane.getChildren().add(vBox);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            scene.setRoot(stackPane);
+
+
+                        }
                     }
                     movingPiece.move(clickedRow, clickedCol, chessBoardData, move.getSpecialMove(), gridPane);
                     StackPane square = (StackPane) gridPane.getChildren().get(previousClick.getRow() * 8 + previousClick.getCol());
@@ -75,7 +107,7 @@ public class ChessBoardController {
                         }
                     }
                     addPreviousMovePositions(previousClick.getRow(), previousClick.getCol(), clickedRow, clickedCol, gridPane);
-
+                    break;
                 }
             }
             gridPane.setUserData(new Position(clickedRow, clickedCol));
@@ -91,10 +123,9 @@ public class ChessBoardController {
             StackPane squares = (StackPane) gridPane.getChildren().get(i);
             for (Node square : squares.getChildren()) {
                 if (square instanceof Rectangle) {
-                    if (((Rectangle) square).getFill().equals(Color.rgb(245, 246, 130))) {
-                        int row = i / 8;
-                        int col = i % 8;
-                        if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {
+                    int row = i / 8;
+                    int col = i % 8;
+                        if (((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1))) {
 
                             ((Rectangle) square).setFill(ChessBoard.getSecondaryColor());
 
@@ -102,7 +133,6 @@ public class ChessBoardController {
                             ((Rectangle) square).setFill(ChessBoard.getPrimaryColor());
 
                         }
-                    }
                 }
             }
         }
@@ -112,13 +142,28 @@ public class ChessBoardController {
         StackPane startSquare = (StackPane) gridPane.getChildren().get(startRow * 8 + startCol);
         for (Node square : startSquare.getChildren()) {
             if (square instanceof Rectangle) {
-                ((Rectangle) square).setFill(Color.rgb(245, 246, 130));
+                if ((startRow % 2 == 0 && startCol % 2 == 0) || (startRow % 2 == 1 && startCol % 2 == 1)) {
+
+                    ((Rectangle) square).setFill(Color.rgb(245, 246, 130));
+
+                } else {
+                    ((Rectangle) square).setFill(Color.rgb(185, 202, 67));
+
+                }
+                break;
             }
         }
         StackPane endSquare = (StackPane) gridPane.getChildren().get(endRow * 8 + endCol);
         for (Node square : endSquare.getChildren()) {
             if (square instanceof Rectangle) {
-                ((Rectangle) square).setFill(Color.rgb(245, 246, 130));
+                if ((endRow % 2 == 0 && endCol % 2 == 0) || (endRow % 2 == 1 && endCol % 2 == 1)) {
+                    ((Rectangle) square).setFill(Color.rgb(245, 246, 130));
+
+                } else {
+                    ((Rectangle) square).setFill(Color.rgb(185, 202, 67));
+
+                }
+                break;
             }
         }
     }
@@ -188,7 +233,7 @@ public class ChessBoardController {
             if (place.getSpecialMove() == null) {
                 Circle circle = new Circle(11.5, Color.rgb(0, 0, 0, 0.14));
                 square.getChildren().add(circle);
-            } else if (place.getSpecialMove().equals(Move.TAKING)) {
+            } else if (place.getSpecialMove().equals(Move.TAKING) || place.getSpecialMove().equals(Move.PROMOTE_TAKING)) {
                 //Custom shape
                 Circle outerCircle = new Circle(45, Color.rgb(0, 0, 0, 0.14));
 
@@ -207,13 +252,22 @@ public class ChessBoardController {
             StackPane square = (StackPane) gridPane.getChildren().get(row * 8 + col);
             for (Node item : square.getChildren()) {
                 if (item instanceof Rectangle) {
-                    ((Rectangle) item).setFill(Color.rgb(185, 202, 67));
+                    if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {
+
+                        ((Rectangle) item).setFill(Color.rgb(245, 246, 130));
+
+                    } else {
+                        ((Rectangle) item).setFill(Color.rgb(185, 202, 67));
+
+                    }
+                    break;
                 }
             }
         }
 
     }
 
+    // rgb(245, 246, 130), rgb(185, 202, 67)
     private void removeHints(ArrayList<Position> placesToRemoveHints, GridPane gridPane, int row, int col) {
         for (Position move : placesToRemoveHints) {
             StackPane square = (StackPane) gridPane.getChildren().get(move.getRow() * 8 + move.getCol());
@@ -230,19 +284,17 @@ public class ChessBoardController {
                 }
             }
         }
-
-        StackPane square = (StackPane) gridPane.getChildren().get(row * 8 + col);
-        for (Node item : square.getChildren()) {
-            if (item instanceof Rectangle) {
-                if (((Rectangle) item).getFill().equals(Color.rgb(185, 202, 67))) {
+        if (!placesToRemoveHints.isEmpty()) {
+            StackPane square = (StackPane) gridPane.getChildren().get(row * 8 + col);
+            for (Node item : square.getChildren()) {
+                if (item instanceof Rectangle) {
                     if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {
-
                         ((Rectangle) item).setFill(ChessBoard.getSecondaryColor());
-
                     } else {
                         ((Rectangle) item).setFill(ChessBoard.getPrimaryColor());
 
                     }
+                    break;
                 }
             }
         }
