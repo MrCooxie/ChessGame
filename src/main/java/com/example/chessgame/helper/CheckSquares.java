@@ -10,14 +10,6 @@ public class CheckSquares {
 
     }
 
-    public static boolean squareEmptyAndNoCheck(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
-        return (isWithInBoard(row, col) && chessBoardData.getChessBoard()[row][col] == null && moveNotCheck(chessBoardData, row, col, color, piece));
-    }
-
-    public static boolean squareOppositeColorAndNoCheck(ChessBoardData chessBoardData, int row, int col, char color, Piece piece) {
-        return (isWithInBoard(row, col) && chessBoardData.getChessBoard()[row][col] != null && !(chessBoardData.getChessBoard()[row][col].getColor() == color) && moveNotCheck(chessBoardData, row, col, color, piece));
-    }
-
     public static boolean squareEmpty(Piece[][] chessBoard, int row, int col) {
         return chessBoard[row][col] == null;
     }

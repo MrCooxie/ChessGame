@@ -42,12 +42,12 @@ public class ChessBoardData {
 
     public void printChessBoard() {
         for (int row = 0; row < 8; row++) {
-            String rowText = "[";
+            StringBuilder rowText = new StringBuilder("[");
             for (int col = 0; col < 8; col++) {
                 if (chessBoard[row][col] != null) {
-                    rowText += chessBoard[row][col].getLetter() + ", ";
+                    rowText.append(chessBoard[row][col].getLetter()).append(", ");
                 } else {
-                    rowText += "-, ";
+                    rowText.append("-, ");
                 }
             }
             System.out.println(rowText.substring(0, rowText.length() - 2) + "]");

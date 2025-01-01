@@ -51,7 +51,7 @@ public abstract class Piece {
         Piece[][] chessBoard = chessBoardData.getChessBoard();
         if (specialMove != null) {
             if (specialMove.equals(Move.CASTLING)) {
-                ((King) this).castle(chessBoard, row, col);
+                ((King) this).castle(chessBoard, col);
             }
             if (specialMove.equals(Move.EN_PASSANT)) {
                 assert this instanceof Pawn;
@@ -87,18 +87,12 @@ public abstract class Piece {
 
     private void checkForGameEnd(ChessBoardData chessBoardData, GridPane gridPane) {
         switch (getGameResult(chessBoardData)) {
-            case BLACK_WIN -> {
-                new GameOverController().createMatchOverScreen(GameResult.BLACK_WIN, gridPane);
-            }
-            case WHITE_WIN -> {
-                new GameOverController().createMatchOverScreen(GameResult.WHITE_WIN, gridPane);
-            }
+            case BLACK_WIN -> new GameOverController().createMatchOverScreen(GameResult.BLACK_WIN, gridPane);
+            case WHITE_WIN -> new GameOverController().createMatchOverScreen(GameResult.WHITE_WIN, gridPane);
             case PLAY_ON -> {
 
             }
-            case STALEMATE -> {
-                new GameOverController().createMatchOverScreen(GameResult.STALEMATE, gridPane);
-            }
+            case STALEMATE -> new GameOverController().createMatchOverScreen(GameResult.STALEMATE, gridPane);
         }
     }
 
@@ -126,7 +120,6 @@ public abstract class Piece {
                             return GameResult.BLACK_WIN;
 
                         }
-                        //Stalemate and stuff
                     }
                 }
             }

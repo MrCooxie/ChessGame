@@ -90,21 +90,10 @@ public class Pawn extends Piece {
         char promotedPieceColor = piece.charAt(0);
         char pieceToPromoteTO = piece.charAt(1);
         switch (pieceToPromoteTO) {
-            case 'q' -> {
-                chessBoard[this.row][this.col] = new Queen(promotedPieceColor, this.row, this.col);
-            }
-            case 'r' -> {
-                chessBoard[this.row][this.col] = new Rook(promotedPieceColor, this.row, this.col);
-
-            }
-            case 'b' -> {
-                chessBoard[this.row][this.col] = new Bishop(promotedPieceColor, this.row, this.col);
-
-            }
-            case 'n' -> {
-                chessBoard[this.row][this.col] = new Knight(promotedPieceColor, this.row, this.col);
-
-            }
+            case 'q' -> chessBoard[this.row][this.col] = new Queen(promotedPieceColor, this.row, this.col);
+            case 'r' -> chessBoard[this.row][this.col] = new Rook(promotedPieceColor, this.row, this.col);
+            case 'b' -> chessBoard[this.row][this.col] = new Bishop(promotedPieceColor, this.row, this.col);
+            case 'n' -> chessBoard[this.row][this.col] = new Knight(promotedPieceColor, this.row, this.col);
         }
     }
 }

@@ -81,8 +81,12 @@ public class King extends Piece {
     }
 
     public boolean isUnderCheck(Piece[][] chessBoard) {
-        //TODO: Can pawn attack
-        return canKnightAttack(chessBoard) || canDiagonalAttack(chessBoard) || canStraightAttack(chessBoard);
+        return canKnightAttack(chessBoard) || canDiagonalAttack(chessBoard) || canStraightAttack(chessBoard) || canPawnAttack(chessBoard);
+    }
+
+    private boolean canPawnAttack(Piece[][] chessBoard) {
+        int increment = (color == 'b') ? 1 : -1;
+        return (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + increment, col - 1, color) && chessBoard[row + increment][col - 1] instanceof Pawn) || (CheckSquares.squareInBoardNotEmptyOppositeColor(chessBoard, row + increment, col + 1, color) && chessBoard[row + increment][col + 1] instanceof Pawn);
     }
 
     private boolean canKnightAttack(Piece[][] chessBoard) {
@@ -102,14 +106,22 @@ public class King extends Piece {
             if (CheckSquares.isWithInBoard(row + i * rowIncrement, col + i * colIncrement)) {
                 if (CheckSquares.squareEmpty(chessBoard, row + i * rowIncrement, col + i * colIncrement)) {
                     continue;
-                } else if (CheckSquares.squareOppositeColor(chessBoard, row + i * rowIncrement, col + i * colIncrement, color)) {
+                }
+                if (CheckSquares.squareOppositeColor(chessBoard, row + i * rowIncrement, col + i * colIncrement, color)) {
                     Piece piece = chessBoard[row + i * rowIncrement][col + i * colIncrement];
-                    if ((rowIncrement == 0 || colIncrement == 0) && (piece instanceof Rook || piece instanceof Queen)) {//means can attack straight
-                        return true;
+                    if ((rowIncrement == 0 || colIncrement == 0)) {
+                        //means can attack straight
+                        if ((piece instanceof Rook || piece instanceof Queen)) {
+                            System.out.println(piece);
+                            return true;
+                        }
+                    } else {
+                        if (piece instanceof Bishop || piece instanceof Queen) {
+                            System.out.println(piece);
+                            return true;
+                        }
                     }
-                    if (piece instanceof Bishop || piece instanceof Queen) {
-                        return true;
-                    }
+
                 } else {
                     return false;
                 }
@@ -120,7 +132,7 @@ public class King extends Piece {
         return false;
     }
 
-    public void castle(Piece[][] chessBoard, int row, int col) {
+    public void castle(Piece[][] chessBoard, int col) {
         //Figure if king side or queen side.
         if (this.col < col) {
             //King Side

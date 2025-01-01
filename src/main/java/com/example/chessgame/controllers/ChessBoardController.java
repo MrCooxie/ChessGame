@@ -25,6 +25,7 @@ import javafx.scene.shape.Shape;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ChessBoardController {
 
@@ -48,7 +49,7 @@ public class ChessBoardController {
             }
             gridPane.setUserData(new Position(clickedRow, clickedCol));
         } else {
-            removeHints(chessBoard[previousClick.getRow()][previousClick.getCol()].getPossibleMoves(chessBoardData), gridPane, previousClick.getRow(), previousClick.getCol());
+            removeHints(chessBoard[previousClick.getRow()][previousClick.getCol()].getPossibleMoves(chessBoardData), gridPane, previousClick.getRow(), previousClick.getCol(), chessBoardData);
             if (chessBoard[clickedRow][clickedCol] != null) {
                 addHints(chessBoard[clickedRow][clickedCol].getPossibleMoves(chessBoardData), gridPane, clickedRow, clickedCol, chessBoardData);
             }
@@ -70,14 +71,14 @@ public class ChessBoardController {
                             Scene scene = gridPane.getScene();
                             stackPane.getChildren().add(gridPane);
                             try {
-                                VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenWhite.fxml"));
+                                VBox vBox = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenWhite.fxml")));
                                 vBox.setUserData(new PawnPromoteDTO(gridPane, clickedRow, clickedCol, chessBoardData));
                                 if (chessBoardData.getTurn() == 'w') {
                                     StackPane.setAlignment(vBox, Pos.TOP_LEFT);
                                     StackPane.setMargin(vBox, new Insets(0, 0, 0, clickedCol * 92));
 
                                 } else {
-                                    vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenBlack.fxml"));
+                                    vBox = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("com/example/chessgame/fxml/PawnPromoteScreenBlack.fxml")));
                                     StackPane.setAlignment(vBox, Pos.BOTTOM_LEFT);
                                     StackPane.setMargin(vBox, new Insets(0, 0, 0, clickedCol * 92));
                                     vBox.setUserData(new PawnPromoteDTO(gridPane, clickedRow, clickedCol, chessBoardData));
@@ -125,14 +126,14 @@ public class ChessBoardController {
                 if (square instanceof Rectangle) {
                     int row = i / 8;
                     int col = i % 8;
-                        if (((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1))) {
+                    if (((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1))) {
 
-                            ((Rectangle) square).setFill(ChessBoard.getSecondaryColor());
+                        ((Rectangle) square).setFill(ChessBoard.getSecondaryColor());
 
-                        } else {
-                            ((Rectangle) square).setFill(ChessBoard.getPrimaryColor());
+                    } else {
+                        ((Rectangle) square).setFill(ChessBoard.getPrimaryColor());
 
-                        }
+                    }
                 }
             }
         }
@@ -230,10 +231,7 @@ public class ChessBoardController {
     private void addHints(ArrayList<Position> placesToAddHints, GridPane gridPane, int row, int col, ChessBoardData chessBoardData) {
         for (Position place : placesToAddHints) {
             StackPane square = (StackPane) gridPane.getChildren().get(place.getRow() * 8 + place.getCol());
-            if (place.getSpecialMove() == null) {
-                Circle circle = new Circle(11.5, Color.rgb(0, 0, 0, 0.14));
-                square.getChildren().add(circle);
-            } else if (place.getSpecialMove().equals(Move.TAKING) || place.getSpecialMove().equals(Move.PROMOTE_TAKING)) {
+            if (place.getSpecialMove() != null && (place.getSpecialMove().equals(Move.TAKING) || place.getSpecialMove().equals(Move.PROMOTE_TAKING))) {
                 //Custom shape
                 Circle outerCircle = new Circle(45, Color.rgb(0, 0, 0, 0.14));
 
@@ -246,6 +244,9 @@ public class ChessBoardController {
 
                 donut.setFill(Color.rgb(0, 0, 0, 0.14));
                 square.getChildren().add(donut);
+            } else {
+                Circle circle = new Circle(11.5, Color.rgb(0, 0, 0, 0.14));
+                square.getChildren().add(circle);
             }
         }
         if (chessBoardData.getTurn() == chessBoardData.getChessBoard()[row][col].getColor()) {
@@ -268,7 +269,7 @@ public class ChessBoardController {
     }
 
     // rgb(245, 246, 130), rgb(185, 202, 67)
-    private void removeHints(ArrayList<Position> placesToRemoveHints, GridPane gridPane, int row, int col) {
+    private void removeHints(ArrayList<Position> placesToRemoveHints, GridPane gridPane, int row, int col, ChessBoardData chessBoardData) {
         for (Position move : placesToRemoveHints) {
             StackPane square = (StackPane) gridPane.getChildren().get(move.getRow() * 8 + move.getCol());
             for (Node item : square.getChildren()) {
@@ -284,8 +285,9 @@ public class ChessBoardController {
                 }
             }
         }
-        if (!placesToRemoveHints.isEmpty()) {
-            StackPane square = (StackPane) gridPane.getChildren().get(row * 8 + col);
+        StackPane square = (StackPane) gridPane.getChildren().get(row * 8 + col);
+        Piece piece = chessBoardData.getChessBoard()[row][col];
+        if (piece.getColor() == chessBoardData.getTurn()) {
             for (Node item : square.getChildren()) {
                 if (item instanceof Rectangle) {
                     if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {

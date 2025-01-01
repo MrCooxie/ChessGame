@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GameOverController {
 
@@ -26,7 +27,7 @@ public class GameOverController {
         scene.setRoot(stackPane);
 
         try {
-            VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("com/example/chessgame/fxml/GameResultScreen.fxml"));
+            VBox vBox = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("com/example/chessgame/fxml/GameResultScreen.fxml")));
             vBox.setUserData(gridPane);
             addResultText(gameResult, vBox);
             stackPane.getChildren().add(vBox);
@@ -41,15 +42,9 @@ public class GameOverController {
     private void addResultText(GameResult gameResult, VBox vBox) {
         Text text = (Text) vBox.lookup("#result");
         switch (gameResult) {
-            case WHITE_WIN -> {
-                text.setText("Valge võitis!");
-            }
-            case BLACK_WIN -> {
-                text.setText("Must võitis!");
-            }
-            case STALEMATE -> {
-                text.setText("Mäng lõppes viigiga!");
-            }
+            case WHITE_WIN -> text.setText("Valge võitis!");
+            case BLACK_WIN -> text.setText("Must võitis!");
+            case STALEMATE -> text.setText("Mäng lõppes viigiga!");
 
         }
 
